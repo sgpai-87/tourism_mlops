@@ -58,6 +58,5 @@ input_data = pd.DataFrame([{
 
 # Predict button
 if st.button("Predict Purchase"):
-    prediction = model.predict(input_data)[0]
-    st.subheader("Prediction Result:")
-    st.success("Purchase Prediction:",prediction)
+    prediction = 'Yes' if model.predict(input_data)[0] == 1 else 'No'
+    st.write(f"Purchase Prediction Result: {prediction}.")
