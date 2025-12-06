@@ -20,7 +20,7 @@ print("Dataset loaded successfully.")
 drop_cols = ['Unnamed: 0','CustomerID']
 df.drop(drop_cols,axis=1,inplace=True)
 
-tourism_pkg.drop_duplicates(inplace=True)
+df.drop_duplicates(inplace=True)
 
 # Data correction
 df['Gender'] = df['Gender'].replace('Fe Male','Female')
