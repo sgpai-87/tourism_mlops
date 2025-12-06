@@ -20,11 +20,14 @@ print("Dataset loaded successfully.")
 drop_cols = ['Unnamed: 0','CustomerID']
 df.drop(drop_cols,axis=1,inplace=True)
 
+tourism_pkg.drop_duplicates(inplace=True)
+
 # Data correction
 df['Gender'] = df['Gender'].replace('Fe Male','Female')
 # Split into X (features) and y (target)
 X = df.drop(columns=['ProdTaken'])
 y = df['ProdTaken']
+
 
 # Perform train-test split
 X_train, X_test, y_train, y_test = train_test_split(
