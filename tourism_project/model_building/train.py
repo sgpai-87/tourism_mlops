@@ -33,15 +33,11 @@ Xtrain_path = "hf://datasets/sgpai/tourism-mlops/X_train.csv"
 Xtest_path = "hf://datasets/sgpai/tourism-mlops/X_test.csv"
 ytrain_path = "hf://datasets/sgpai/tourism-mlops/y_train.csv"
 ytest_path = "hf://datasets/sgpai/tourism-mlops/y_test.csv"
-Xtrain_un_path = "hf://datasets/sgpai/tourism-mlops/X_train_un.csv"
-ytrain_un_path = "hf://datasets/sgpai/tourism-mlops/y_train_un.csv"
 
 X_train = pd.read_csv(Xtrain_path)
 X_test = pd.read_csv(Xtest_path)
 y_train = pd.read_csv(ytrain_path)
 y_test = pd.read_csv(ytest_path)
-X_train_un = pd.read_csv(Xtrain_un_path)
-y_train_un = pd.read_csv(ytrain_un_path)
 
 
 # Seperate the columns by type for describe
@@ -55,8 +51,12 @@ preprocessor = make_column_transformer(
     (OneHotEncoder(handle_unknown='ignore'), cat_cols)
 )
 
+# Set the clas weight to handle class imbalance
+class_weight = y_train.value_counts()[0] / y_train.value_counts()[1]
+class_weight
+
 # Define base XGBoost Regressor
-xgb_model = xgb.XGBClassifier(random_state=42, n_jobs=-1)
+xgb_model = xgb.XGBClassifier(scale_pos_weight=class_weight,random_state=42, n_jobs=-1)
 
 # Define hyperparameter grid
 param_grid = {
@@ -74,7 +74,7 @@ model_pipeline = make_pipeline(preprocessor, xgb_model)
 with mlflow.start_run():
     # Hyperparameter tuning
     grid_search = GridSearchCV(model_pipeline, param_grid, cv=5, n_jobs=-1)
-    grid_search.fit(X_train_un, y_train_un)
+    grid_search.fit(X_train, y_train)
 
     # Log all parameter combinations and their mean test scores
     results = grid_search.cv_results_
@@ -97,13 +97,13 @@ with mlflow.start_run():
 
     classification_threshold = 0.45
 
-    y_pred_train_proba = best_model.predict_proba(X_train_un)[:, 1]
+    y_pred_train_proba = best_model.predict_proba(X_train)[:, 1]
     y_pred_train = (y_pred_train_proba >= classification_threshold).astype(int)
 
     y_pred_test_proba = best_model.predict_proba(X_test)[:, 1]
     y_pred_test = (y_pred_test_proba >= classification_threshold).astype(int)
 
-    train_report = classification_report(y_train_un, y_pred_train, output_dict=True)
+    train_report = classification_report(y_train, y_pred_train, output_dict=True)
     test_report = classification_report(y_test, y_pred_test, output_dict=True)
 
     mlflow.log_metrics({
