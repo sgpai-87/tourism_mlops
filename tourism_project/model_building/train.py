@@ -11,7 +11,8 @@ from sklearn.metrics import (
     f1_score,
     accuracy_score,
     recall_score,
-    precision_score
+    precision_score,
+    classification_report
 )
 # for model serialization
 import joblib
