@@ -51,7 +51,7 @@ preprocessor = make_column_transformer(
 )
 
 # Set the clas weight to handle class imbalance
-class_weight = ytrain.value_counts()[0] / ytrain.value_counts()[1]
+class_weight = y_train.value_counts()[0] / y_train.value_counts()[1]
 class_weight
 
 # Define base XGBoost Regressor
