@@ -60,12 +60,12 @@ xgb_model = xgb.XGBClassifier(scale_pos_weight=class_weight,random_state=42, n_j
 
 # Define hyperparameter grid
 param_grid = {
-    'xgbclassifier__n_estimators': [50, 75, 100],    # number of tree to build
-    'xgbclassifier__max_depth': [2, 3],    # maximum depth of each tree
-    'xgbclassifier__colsample_bytree': [0.4, 0.6],    # percentage of attributes to be considered (randomly) for each tree
-    'xgbclassifier__colsample_bylevel': [0.4, 0.6],    # percentage of attributes to be considered (randomly) for each level of a tree
+    'xgbclassifier__n_estimators': [100,150,200],    # number of tree to build
+    'xgbclassifier__max_depth': [3,4,5],    # maximum depth of each tree
+    'xgbclassifier__colsample_bytree': [0.6],    # percentage of attributes to be considered (randomly) for each tree
+    'xgbclassifier__colsample_bylevel': [0.6],    # percentage of attributes to be considered (randomly) for each level of a tree
     'xgbclassifier__learning_rate': [0.01, 0.1],    # learning rate
-    'xgbclassifier__reg_lambda': [0.4, 0.6],    # L2 regularization factor
+    'xgbclassifier__reg_lambda': [0.6],    # L2 regularization factor
 }
 
 # Pipeline
